@@ -1,8 +1,11 @@
 function init(options = {}) {
-	const getActiveRevision = options.readRevision;
+	const getActiveRevision = async () => options.readRevision();
+
+	const setActiveRevision = async id => options.writeRevision(id);
 
 	return {
 		getActiveRevision,
+		setActiveRevision,
 	};
 }
 
