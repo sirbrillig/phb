@@ -34,6 +34,12 @@ function init(options) {
 	const setActiveDiff = async id => options.writeDiff(id);
 
 	const createNewRevision = async () => {
+		// TODO: verify we are in root directory
+		// TODO: get only modified files that do not match ignore if none are provided
+		// TODO: svn add modified files that are not tracked
+		// TODO: Verify that all files are in the same svn repo
+		// TODO: open editor to get commit message (and use unused previously written message if it exists)
+		// TODO: handle errors and allow retrying
 		const output = await options.runArcCommand('diff --create');
 		if (!output) {
 			throw new Error('Arc command did not return anything');
