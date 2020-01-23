@@ -16,5 +16,13 @@
   },
   "directories": {
     "test": "test"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sirbrillig/phb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sirbrillig/phb/issues"
+  },
+  "homepage": "https://github.com/sirbrillig/phb#readme"
 }
