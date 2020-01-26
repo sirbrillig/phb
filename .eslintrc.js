@@ -5,7 +5,7 @@ module.exports = {
 		node: true,
 		jest: true,
 	},
-	extends: 'eslint:recommended',
+	extends: ['eslint:recommended', '@typescript-eslint/eslint-plugin'],
 	globals: {
 		Atomics: 'readonly',
 		SharedArrayBuffer: 'readonly',
@@ -14,4 +14,5 @@ module.exports = {
 		ecmaVersion: 2018,
 	},
 	rules: {},
+	plugins: ['@typescript-eslint/eslint-plugin'],
 };
