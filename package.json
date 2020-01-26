@@ -2,17 +2,25 @@
   "name": "@sirbrillig/phb",
   "version": "1.0.0",
   "description": "A stateful Phabricator cli client",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "bin": {
+    "phb": "./dist/index.js"
+  },
   "scripts": {
+    "build": "tsc",
     "test": "jest"
   },
   "author": "Payton Swick <payton@foolord.com>",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@types/node": "^13.5.0",
     "eslint": "^6.8.0",
     "jest": "^25.1.0",
-    "prettier": "^1.19.1"
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   },
   "directories": {
     "test": "test"
