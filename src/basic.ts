@@ -1,14 +1,17 @@
 interface FileInterface {
-	readRevision: () => Promise<string>;
-	writeRevision: (data: string) => null;
+	readRevision: () => Promise<string|null>;
+	writeRevision: (data: string) => Promise<void>;
 	readDiff: () => Promise<string>;
-	writeDiff: (data: string) => null;
+	writeDiff: (data: string) => Promise<void>;
 	readAllDiffs: (revisionId: string) => Promise<string>;
 }
 
 interface ArcInterface {
 	runArcCommand: (command: string) => Promise<string>;
-	runArcConduitCommand: (command: string, data: object) => Promise<ArcConduitCommandResult>;
+	runArcConduitCommand: (
+		command: string,
+		data: object
+	) => Promise<ArcConduitCommandResult>;
 }
 
 interface ArcConduitCommandResult {
@@ -20,19 +23,31 @@ interface ArcConduitResponse {
 	diffs?: Array<string>;
 }
 
+interface PHBInterface {
+	getActiveRevision: () => Promise<string | null>;
+	setActiveRevision: (revision: string) => Promise<void>;
+	getActiveDiff: () => Promise<string | null>;
+	setActiveDiff: (diff: string) => Promise<void>;
+	createNewRevision: () => Promise<void>;
+}
+
+function stripDFromRevisionId(revisionId: string): string {
+	return revisionId.substr(1);
+}
+
 function init({
 	fileInterface,
 	arcInterface,
 }: {
 	fileInterface: FileInterface;
 	arcInterface: ArcInterface;
-}) {
-	const getActiveRevision = async () => fileInterface.readRevision();
+}): PHBInterface {
+	const getActiveRevision = async (): Promise<string|null> => fileInterface.readRevision();
 
-	const setActiveRevision = async (id: string) =>
+	const setActiveRevision = async (id: string): Promise<void> =>
 		fileInterface.writeRevision(id);
 
-	const getActiveDiff = async () => {
+	const getActiveDiff = async (): Promise<string|null>=> {
 		const revisionId = await getActiveRevision();
 		if (!revisionId) {
 			return null;
@@ -48,9 +63,9 @@ function init({
 		return diffId;
 	};
 
-	const setActiveDiff = async (id: string) => fileInterface.writeDiff(id);
+	const setActiveDiff = async (id: string): Promise<void> => fileInterface.writeDiff(id);
 
-	const createNewRevision = async () => {
+	const createNewRevision = async (): Promise<void> => {
 		// TODO: verify we are in root directory
 		// TODO: get only modified files that do not match ignore if none are provided
 		// TODO: svn add modified files that are not tracked
@@ -105,10 +120,6 @@ function init({
 		setActiveDiff,
 		createNewRevision,
 	};
-}
-
-function stripDFromRevisionId(revisionId: string): string {
-	return revisionId.substr(1);
 }
 
 module.exports = init;
