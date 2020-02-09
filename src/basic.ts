@@ -1,53 +1,23 @@
-interface FileInterface {
-	readRevision: () => Promise<string|null>;
-	writeRevision: (data: string) => Promise<void>;
-	readDiff: () => Promise<string>;
-	writeDiff: (data: string) => Promise<void>;
-	readAllDiffs: (revisionId: string) => Promise<string>;
-}
-
-interface ArcInterface {
-	runArcCommand: (command: string) => Promise<string>;
-	runArcConduitCommand: (
-		command: string,
-		data: object
-	) => Promise<ArcConduitCommandResult>;
-}
-
-interface ArcConduitCommandResult {
-	errorMessage?: string;
-	response?: Array<ArcConduitResponse>;
-}
-
-interface ArcConduitResponse {
-	diffs?: Array<string>;
-}
-
-interface PHBInterface {
-	getActiveRevision: () => Promise<string | null>;
-	setActiveRevision: (revision: string) => Promise<void>;
-	getActiveDiff: () => Promise<string | null>;
-	setActiveDiff: (diff: string) => Promise<void>;
-	createNewRevision: () => Promise<void>;
-}
+import { PHBInterface, FileInterface, ArcInterface } from '../src/types';
 
 function stripDFromRevisionId(revisionId: string): string {
 	return revisionId.substr(1);
 }
 
-function init({
+export default function init({
 	fileInterface,
 	arcInterface,
 }: {
 	fileInterface: FileInterface;
 	arcInterface: ArcInterface;
 }): PHBInterface {
-	const getActiveRevision = async (): Promise<string|null> => fileInterface.readRevision();
+	const getActiveRevision = async (): Promise<string | null> =>
+		fileInterface.readRevision();
 
 	const setActiveRevision = async (id: string): Promise<void> =>
 		fileInterface.writeRevision(id);
 
-	const getActiveDiff = async (): Promise<string|null>=> {
+	const getActiveDiff = async (): Promise<string | null> => {
 		const revisionId = await getActiveRevision();
 		if (!revisionId) {
 			return null;
@@ -63,7 +33,8 @@ function init({
 		return diffId;
 	};
 
-	const setActiveDiff = async (id: string): Promise<void> => fileInterface.writeDiff(id);
+	const setActiveDiff = async (id: string): Promise<void> =>
+		fileInterface.writeDiff(id);
 
 	const createNewRevision = async (): Promise<void> => {
 		// TODO: verify we are in root directory
@@ -121,5 +92,3 @@ function init({
 		createNewRevision,
 	};
 }
-
-module.exports = init;
