@@ -7,7 +7,7 @@ module.exports = {
 	],
 	globals: { Atomics: 'readonly', SharedArrayBuffer: 'readonly' },
 	parser: '@typescript-eslint/parser',
-	parserOptions: { ecmaVersion: 2018 },
+	parserOptions: { ecmaVersion: 2018, project: './tsconfig.json' },
 	plugins: ['@typescript-eslint'],
 	root: true,
 };
